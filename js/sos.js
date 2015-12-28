@@ -1,5 +1,5 @@
 /**
- * Parallel Second Order Section using Web Audio API
+ * Parallel Second Order Section
  * Quim Llimona, 2015
  */
 
@@ -8,24 +8,36 @@ function SecondOrderSection(ctx, params) {
 
     this.params = params || {};
     $.extend(this.params, {
-        frequencies: [500, 700, 800],
-        q: 10
+        resonators: [
+            {f: 300,  g: 0.6,  q: 10}, 
+            {f: 500,  g: 0.3,  q: 10}, 
+            {f: 1000, g: 0.5,  q: 10}, 
+            {f: 3000, g: 1.0,  q: 0.1}
+        ],
+        gain: 1.0
     });
 
-    var that = this;
-    this.nodes = this.params.frequencies.map(function(f) {
+    this.nodes.input = ctx.createGain();
+    this.node.output = ctx.createGain();
+    this.node.output.gain = this.params.gain;
+    this.nodes.resonators = this.params.resonators.map(function(r) {
+        // gain
+        var gain = ctx.createGain();
+        gain.gain.value = r.g;
+        // 2nd order resonator
         var filter = ctx.createBiquadFilter();
         filter.type = 'peaking';
-        filter.frequency.value = f;
-        filter.Q.value = that.params.q;
-        return filter;
-    });
+        filter.frequency.value = r.f;
+        filter.Q.value = this.params.r.q;
+        // patch
+        this.node.input.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.node.output);
+        // return resonator object
+        return {r: filter, g: gain};
+    }.bind(this));
 
-    for (var i = 1; i < this.nodes.length; i++) {
-        this.nodes[i-1].connect(this.nodes[i]);
-    }
-
-    this.input = this.nodes[0];
-    this.output = this.nodes[this.nodes.length-1];
+    this.input = this.nodes.input;
+    this.output = this.nodes.output;
 }
 

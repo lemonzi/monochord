@@ -1,9 +1,22 @@
+/**
+ * Monochord demo app
+ * Quim Llimona, 2015
+ */
+
 $(function() {
     
+    // Create the global audio context (one per app!)
     var ctx = new AudioContext();
-    var chord = new MonoChord(ctx);
-    chord.output.connect(ctx.destination);
+
+    // Create audio blocks
+    var osc = new MonoChord(ctx);
+    var body = new SecondOrderSection(ctx);
+
+    // Connect everything together
+    osc.output.connect(body.input);
+    body.output.connect(ctx.destination);
     
+    // Global exposure for debugging
     window.chord = chord;
 
 });
