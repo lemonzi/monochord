@@ -2,12 +2,16 @@
   "name": "monochord",
   "version": "1.0.0",
   "description": "Monochord app",
-  "main": "js/index.js",
+  "main": "bundle.js",
   "author": "Quim Llimona",
-  "license": "ISC",
+  "license": "<stealth>",
   "private": true,
   "dependencies": {
     "jquery": "^2.1.4",
     "jquery-knob": "^1.2.11"
+  },
+  "dev-dependencies": {
+    "uglify-js": "latest",
+    "serve": "lastest"
   }
 }
