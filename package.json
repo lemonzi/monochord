@@ -1,0 +1,12 @@
+{
+  "name": "monochord",
+  "version": "1.0.0",
+  "description": "Monochord app",
+  "main": "js/index.js",
+  "author": "Quim Llimona",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "jquery": "^2.1.4"
+  }
+}
