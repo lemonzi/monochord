@@ -17,6 +17,15 @@ $(function() {
     body.output.connect(ctx.destination);
     
     // Global exposure for debugging
-    window.chord = chord;
+    window.chord = osc;
+
+    // Load monochords
+    $(".monochord").load("fragments/monochord.html", function() {
+        $(".knob").knob({min: 0, max: 1000, step: 0.01});
+        $(".play").click(function() {
+            osc.play();
+        });
+    });
 
 });
+
