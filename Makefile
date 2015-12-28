@@ -1,22 +1,21 @@
-SRC=$(shell echo js/{AudioContextMonkeyPatch,adsr,sos,monochord,app}.js)
-LIB=$(shell echo node_modules/jquery/dist/jquery.min.js)
+JS_SRC=$(shell echo js/{AudioContextMonkeyPatch,adsr,sos,monochord,app}.js)
+JS_LIB=$(shell echo node_modules/jquery/dist/jquery.min.js)
+CSS_SRC=$(shell echo css/style.css)
 
-all: dist
+all: serve
 
-dist: dev
-	mkdir $@
-	cp index.html bundle.css $@
-	cat $(LIB) $(SRC) | uglify >$@/bundle.js
+dist: $(JS_SRC) $(JS_LIB) $(CSS_SRC) index.html
+	mkdir -p $@
+	cp index.html $@
+	cat $(JS_LIB) $(JS_SRC) | uglify >$@/bundle.js
+	cat $(CSS_SRC) >$@/bundle.css
 
-serve: dev
+serve:
 	open http://localhost:4000
 	python -m SimpleHTTPServer 4000
-
-dev: bundle.js bundle.css index.html
-	echo "Dev is done"
 
 clean:
 	rm -r dist
 
-.PHONY: all dev clean
+.PHONY: all serve clean
 
