@@ -6,23 +6,22 @@
 function SecondOrderSection(ctx, params) {
     this.ctx = ctx;
 
-    this.params = params || {};
-    $.extend(this.params, {
+    this.params = $.extend({
         resonators: [
             {f: 300,   g: 3,  q: 20}, 
             {f: 500,   g: 6,  q: 30}, 
             {f: 1000,  g: 3,  q: 20}, 
-            {f: 3000,  g: 10, q: 40}
+            {f: 3000,  g: 9, q: 10}
         ],
-        gain: 0.5
-    });
+        gain: 0.2
+    }, params);
 
     this.nodes = {
         input: ctx.createGain(), 
         output: ctx.createGain(), 
         resonators: this.params.resonators.map(function(r) {
             var filter = ctx.createBiquadFilter();
-            filter.type = "peaking";
+            filter.type = filter.PEAKING || "peaking";
             filter.frequency.value = r.f;
             filter.Q.value = r.q;
             filter.gain.value = r.g;

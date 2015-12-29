@@ -5,8 +5,14 @@
         <link rel=stylesheet type="test/css" href="bundle.css"/>
     </head>
     <body>
+        <div class="header">
+            <h1>MonoChord Demo</h1>
+            <p>The outer circles represent a monochord; they span a few octaves. You can directly change their frequency by dragging them. Inner circles act as tuning pegs and allow altering the tuning with more precision; spinning a full turn on the middle one will detune the monochord by about a semitone, and the innermost will make micro-tonal adjustments. Press the button on the middle to play a note on that monochord, or press the space bar to play all of them at once. Have fun!</p>
+        </div>
         <div class="container">
-            <div class="monochord"></div>
+            <div class="monochord" data-freq=220></div>
+            <div class="monochord" data-freq=330></div>
+            <div class="monochord" data-freq=440></div>
         </div>
     </body>
 </html>

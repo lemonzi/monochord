@@ -2,6 +2,7 @@
     position: relative;
     width: 350px;
     margin: auto;
+    height: 400px;
 }
 
 .monochord-wrapper .knob-wrap {
@@ -37,4 +38,10 @@
     line-height: 55px;
     cursor: pointer;
     user-select: none;
+}
+
+.monochord-wrapper .knob {
+    /* Override jQuery Knob custom CSS */
+    position: relative!important;
+    font-size: 30!important;
 }
