@@ -1,34 +1,38 @@
+/**
+ * Styling for the MonoChord objet
+ */
+
 .monochord-wrapper {
     position: relative;
-    width: 350px;
+    width: 300px;
     margin: auto;
     height: 400px;
 }
 
 .monochord-wrapper .knob-wrap {
     position: absolute;
-}
-
-.monochord-wrapper .knob-wrap.chord {
-    left: 10px;
-    top: 10px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .monochord-wrapper .knob-wrap.fine {
-    left: 60px;
-    top: 60px;
+    left: 50px;
+    top: 50px;
 }
 
 .monochord-wrapper .knob-wrap.super-fine {
-    left: 110px;
-    top: 110px;
+    left: 100px;
+    top: 100px;
 }
 
 .monochord-wrapper .knob-wrap.play {
-    left: 135px;
-    top: 135px;
+    left: 125px;
+    top: 125px;
     width: 50px;
     height: 50px;
+    transition: background 300ms linear;
     background: #eee;
     color: #333;
     border-radius: 50%;
@@ -37,11 +41,15 @@
     font-size: 24;
     line-height: 55px;
     cursor: pointer;
-    user-select: none;
+}
+
+.monochord-wrapper.enabled .knob-wrap.play {
+    background: #87CEEB;
 }
 
 .monochord-wrapper .knob {
-    /* Override jQuery Knob custom CSS */
+    /* Override jQuery Knob's custom CSS */
     position: relative!important;
     font-size: 30!important;
 }
+

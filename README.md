@@ -8,10 +8,10 @@ The application itself is a static web page that can be embedded anywhere, but i
 Contributing
 ------------
 
-* See the attached `Makefile` for compilation and bundling.
-* All new CSS and JS files (including external libraries) must be listed _both_ in `bundle.{js,css}` and `Makefile`. 
-* If you add additional assets (an image folder, etc.) you must include them in the `Makefile` as well.
+* See the attached `Makefile` for compilation and bundling strategies.
+* All new CSS and JS files (including external libraries) must be listed _both_ in `bundle.{js,css}` and `Makefile`.
+* If you add additional assets (images, etc.) you must include them in the `Makefile` as well.
 * `bundle.*` files are for development only, to ease dependency injection.
-* You may place HTML fragments in `fragments/`, and load them with jQuery's `.load()`.
-* Client-side dependencies are managed with NPM.
+* You may place HTML fragments in `fragments/`, and load them with jQuery's `.load()`. TODO: bundle this as well.
+* (Some) client-side dependencies are managed with NPM.
 

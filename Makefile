@@ -1,4 +1,4 @@
-JS_SRC=$(shell echo js/{AudioContextMonkeyPatch,sos,monochord,app}.js)
+JS_SRC=$(shell echo js/{getQueryVariable,AudioContextMonkeyPatch,sos,monochord,app}.js)
 JS_LIB=$(shell echo node_modules/{jquery/dist/jquery.min.js,jquery-knob/dist/jquery.knob.min.js})
 CSS_SRC=$(shell echo css/{monochord,style}.css)
 

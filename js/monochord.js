@@ -37,10 +37,10 @@ function MonoChord(ctx, params) {
 
 $.extend(MonoChord.prototype, {
 
-    play: function() {
+    play: function(when) {
         var env = this.nodes.envelope.gain;
         var lop = this.nodes.losses.frequency;
-        var t = this.ctx.currentTime;
+        var t = this.ctx.currentTime + (when || 0);
         env.cancelScheduledValues(t);
         lop.cancelScheduledValues(t);
 
