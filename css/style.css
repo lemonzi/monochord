@@ -10,7 +10,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-style: normal;
     font-weight: 300;
-    font-size: 14;
+    font-size: 16;
 }
 
 .header {
@@ -54,9 +54,6 @@ body {
     .title {
         padding-right: 80px;
         font-size: 48;
-    }
-    .headline {
-        font-size: 16;
     }
 }
 
