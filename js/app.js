@@ -38,7 +38,7 @@ $(function() {
         });
 
         // Some specific default values
-        $m.find(".chord .knob").data({min: 100, max: 1000});
+        $m.find(".chord .knob").data({min: 100, max: 800});
         $m.find(".fine .knob").data({incr: 0.05, min: 1, max: 1000});
         $m.find(".super-fine .knob").data({incr: 0.005, min: 1, max: 1000});
 
@@ -51,14 +51,14 @@ $(function() {
                 var osc = monochord.data("osc");
                 var chord = monochord.find(".chord .knob");
                 if (this.$.data("relative")) {
-                    var vn = v / 1000;
+                    var vn = v / this.$.data("max");
                     var diff = vn - (this.$.data("lastValue") || vn);
                     if (diff > 0.5) diff -= 1;
                     if (diff < -0.5) diff += 1;
                     var incr = 1 + this.$.data("incr") * diff;
                     var newFreq = osc.params.frequency * incr;
-                    newFreq = Math.min(newFreq, 1000);
-                    newFreq = Math.max(newFreq, 100);
+                    newFreq = Math.min(newFreq, chord.data("max"));
+                    newFreq = Math.max(newFreq, chord.data("min"));
                     osc.setFrequency(newFreq);
                     chord.val(newFreq).trigger("change");
                     this.$.data("lastValue", vn);
