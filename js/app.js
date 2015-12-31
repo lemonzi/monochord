@@ -95,10 +95,11 @@ $(function() {
     // Play with space bar at a random pluck position with jitter
     $(document).keypress(function(e) {
         if (e.which == 32) {
+            var now = ctx.currentTime + 0.1;
             $(".monochord-wrapper.enabled").each(function() {
                 var osc = $(this).data("osc");
                 var where = Math.random() * 4 + 3;
-                var when = Math.random() * 0.05;
+                var when = now + Math.random() * 0.05;
                 osc.setBeta(where);
                 osc.play(when);
             });

@@ -6,7 +6,7 @@
     position: relative;
     width: 300px;
     margin: auto;
-    height: 400px;
+    height: 360px;
     text-align: left;
 }
 
@@ -52,5 +52,6 @@
     /* Override jQuery Knob's custom CSS */
     position: relative!important;
     font-size: 30!important;
+    height: 1em!important;
 }
 

@@ -26,7 +26,6 @@ function MonoChord(ctx, params) {
 
     this.nodes.losses.type = this.nodes.losses.LOWPASS || 'lowpass';
     this.nodes.losses.frequency.value = 0;
-    this.nodes.losses.gain.value = 1;
 
     this.nodes.envelope.gain.value = 0;
 
@@ -40,24 +39,23 @@ $.extend(MonoChord.prototype, {
     play: function(when) {
         var env = this.nodes.envelope.gain;
         var lop = this.nodes.losses.frequency;
-        var t = this.ctx.currentTime + (when || 0);
+        var t = when || this.ctx.currentTime;
+
         env.cancelScheduledValues(t);
         lop.cancelScheduledValues(t);
 
         t += 0;
         env.setValueAtTime(1, t);
-        lop.setValueAtTime(4000, t);
+        lop.setValueAtTime(8000, t);
 
-        t += 0.01;
-        env.setTargetAtTime(0.5, t, 0.1);
-        lop.setTargetAtTime(2000, t, 0.3);
+        t += 3;
+        lop.exponentialRampToValueAtTime(1, t);
+        lop.setTargetAtTime(0, t, 1);
 
-        t += 0.4;
-        env.setTargetAtTime(0, t, 1);
-        lop.setTargetAtTime(1000, t, 1);
+        t += 1;
+        env.exponentialRampToValueAtTime(0.6, t);
+        env.setTargetAtTime(0, t, 3);
         
-        t += 0.5;
-        lop.setTargetAtTime(500, t, 0.5);
     }, 
 
     setFrequency: function(freq) {
