@@ -16,7 +16,7 @@ function MonoChord(ctx, params) {
         losses: ctx.createBiquadFilter(), 
         envelope: ctx.createGain()
     };
-    
+
     this.nodes.osc.connect(this.nodes.losses);
     this.nodes.losses.connect(this.nodes.envelope);
 
