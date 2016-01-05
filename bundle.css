@@ -2,5 +2,7 @@
  * For development only
  */
 
+@import url("node_modules/normalize.css/normalize.css");
 @import url("css/monochord.css");
 @import url("css/style.css");
+
