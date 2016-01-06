@@ -4,7 +4,34 @@
  */
 
 $(function() {
-    
+
+    var displayFrequencies = false;
+    function toggleDisplayFrequencies(show) {
+        if (typeof show !== "boolean") {
+            show = !displayFrequencies;
+        }
+        displayFrequencies = show;
+        if (show) {
+            $(".monochord-wrapper .chord .knob").show();
+        } else {
+            $(".monochord-wrapper .chord .knob").hide();
+        }
+        $(".freq-btn").text((show ? "Hide" : "Show") + " frequencies");
+        $(".freq-btn").blur();
+    }
+
+    function playAll() {
+        var now = ctx.currentTime + 0.1;
+        $(".monochord-wrapper.enabled").each(function() {
+            var osc = $(this).data("osc");
+            var where = Math.random() * 4 + 3;
+            var when = now + Math.random() * 0.05;
+            osc.setBeta(where);
+            osc.play(when);
+        });
+        $(".play-btn").blur();
+    }
+        
     // Create the global audio context (one per app!)
     var ctx = new AudioContext();
 
@@ -88,24 +115,23 @@ $(function() {
 
         // Hide frequency if requested
         var hide = getQueryVariable("hide") && hide !== "false";
-        $m.find(".chord .knob").trigger('configure', {displayInput: !hide});
+        toggleDisplayFrequencies(!hide);
 
     });
 
     // Play with space bar at a random pluck position with jitter
     $(document).keypress(function(e) {
         if (e.which == 32) {
-            var now = ctx.currentTime + 0.1;
-            $(".monochord-wrapper.enabled").each(function() {
-                var osc = $(this).data("osc");
-                var where = Math.random() * 4 + 3;
-                var when = now + Math.random() * 0.05;
-                osc.setBeta(where);
-                osc.play(when);
-            });
+            playAll();
             e.preventDefault();
         }
     });
+
+    // Also play with the official button
+    $(".play-btn").click(playAll);
+
+    // Toggle display frequencies
+    $(".freq-btn").click(toggleDisplayFrequencies);
 
 });
 

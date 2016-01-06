@@ -48,13 +48,17 @@ $.extend(MonoChord.prototype, {
         env.setValueAtTime(1, t);
         lop.setValueAtTime(8000, t);
 
-        t += 3;
-        lop.exponentialRampToValueAtTime(1, t);
-        lop.setTargetAtTime(0, t, 1);
+        t += 2.5;
+        lop.exponentialRampToValueAtTime(1000, t);
 
-        t += 1;
-        env.exponentialRampToValueAtTime(0.6, t);
-        env.setTargetAtTime(0, t, 3);
+        t += 1.5;
+        env.exponentialRampToValueAtTime(0.4, t);
+
+        t += 5;
+        env.exponentialRampToValueAtTime(0.01, t);
+        lop.exponentialRampToValueAtTime(100, t);
+        env.setTargetAtTime(0, t, 0.01);
+        lop.setTargetAtTime(0, t, 0.01);
         
     }, 
 
