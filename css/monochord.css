@@ -44,7 +44,7 @@
     cursor: pointer;
 }
 
-.monochord-wrapper.enabled .knob-wrap.play {
+.enabled > .monochord-wrapper .knob-wrap.play {
     background: #87CEEB;
 }
 

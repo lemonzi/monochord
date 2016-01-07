@@ -51,6 +51,34 @@ button:hover {
     background: #dddddd ;
 }
 
+.string {
+    width: 960px;
+    margin: 1em auto;
+    padding: 0 auto;
+    left: 0;
+    right: 0;
+    height: 2em;
+    background: salmon;
+    position: absolute;
+    border-radius: 0.3em;
+}
+
+.string .bridge {
+    padding: 0 3px;
+    border-radius: 1em;
+    width: 0;
+    height: 90%;
+    position: absolute;
+    right: 0;
+    top: 5%;
+    float: left;
+    transition: background 100ms;
+}
+
+.string .bridge.enabled {
+    background: lightblue;
+}
+
 @media (min-width: 800px) {
     .header {
         padding: 50px;
