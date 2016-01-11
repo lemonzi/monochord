@@ -10,6 +10,8 @@ $(function() {
     function toggleDisplayFrequencies(show) {
         if (typeof show !== "boolean") {
             show = !displayFrequencies;
+        } else if (show && show.preventDefault) {
+            show.preventDefault();
         }
         displayFrequencies = show;
         if (show) {
@@ -18,14 +20,13 @@ $(function() {
             $(".monochord .chord .knob").hide();
         }
         $(".freq-btn").text((show ? "Hide" : "Show") + " frequencies");
-        $(".freq-btn").blur();
     }
 
     // This function plays all enabled monochords trying to 
     // minimize latency
-    var where = parseFloat(getQueryVariable("timbre")) || 0.01;
-    var jitter = parseFloat(getQueryVariable("jitter")) || 0.03;
-    function playAll() {
+    var where = getQueryVariable("timbre", "number") || 0.01;
+    var jitter = getQueryVariable("jitter", "number") || 0.03;
+    function playAll(e) {
         var oscs = monochords.filter(function(m) {
             return m.monochord.hasClass("enabled");
         }).map(function(m) {
@@ -36,7 +37,9 @@ $(function() {
             var when = now + Math.random() * jitter;
             osc.play(when, where);
         });
-        $(".play-btn").blur();
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
     }
      
     // Create the global audio context (one per app!)
@@ -55,24 +58,40 @@ $(function() {
     }
 
     // Create monochords
-    var monochords = freqs.map(function(f) {
-        var m = new MonoChordUI({
-            ctx: ctx,
-            frequency: f
+    var monochords = [];
+    $.get("fragments/monochord.html",  function(t) {
+        monochords = freqs.map(function(f) {
+            var m = new MonoChordUI({
+                ctx: ctx,
+                frequency: f, 
+                template: $(t)
+            });
+            m.osc.output.connect(body.input);
+            $(".container").append(m.monochord);
+            $(".string").append(m.bridge);
+            return m;
         });
-        m.osc.output.connect(body.input);
-        $(".container").append(m.monochord);
-        $(".string").append(m.bridge);
-        return m;
-    });
 
-    // Hide frequency if requested
-    var hide = getQueryVariable("hide") && hide !== "false";
-    toggleDisplayFrequencies(!hide);
+        // Initially disable monochords if requested
+        var disable = getQueryVariable("disable", "boolean");
+        if (disable) {
+            $(".monochord .play").click();
+            monochords[0].monochord.find(".play").click();
+            if (monochords.length > 1) {
+                monochords[1].monochord.find(".play").click();
+            }
+        }
+
+        // Hide frequency if requested
+        var hide = getQueryVariable("hide", "boolean");
+        if (hide) {
+            $(".freq-btn").hide();
+        }
+        toggleDisplayFrequencies(!hide);
+    });
 
     // Keyboard shortcuts
     $(document).bind('keydown', 'space', playAll);
-    $(document).bind('keydown', 'f', toggleDisplayFrequencies);
 
     // Buttons
     $(".play-btn").click(playAll);
