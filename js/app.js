@@ -57,6 +57,9 @@ $(function() {
         freqs = [200, 400, 600, 800];
     }
 
+    var minFreq = getQueryVariable("min", "number") || 100;
+    var maxFreq = getQueryVariable("max", "number") || 800;
+
     // Create monochords
     var monochords = [];
     $.get("fragments/monochord.html",  function(t) {
@@ -64,6 +67,8 @@ $(function() {
             var m = new MonoChordUI({
                 ctx: ctx,
                 frequency: f, 
+                min: minFreq,
+                max: maxFreq, 
                 template: $(t)
             });
             m.osc.output.connect(body.input);

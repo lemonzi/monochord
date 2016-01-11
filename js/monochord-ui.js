@@ -6,6 +6,7 @@
 function MonoChordUI(opts) {
     
     this.ctx = opts.ctx;
+    this.range = {min: opts.min, max: opts.max};
     this.osc = new MonoChord(this.ctx);
     this.monochord = $('<div class="monochord enabled">');
     this.bridge = $('<div class="bridge enabled">');
@@ -19,7 +20,7 @@ function MonoChordUI(opts) {
     };
 
     // Some specific default values
-    this.knobs.chord.data({min: 100, max: 800});
+    this.knobs.chord.data({min: this.range.min, max: this.range.max});
     this.knobs.fine.data({incr: 0.05, min: 1, max: 1000});
     this.knobs.superfine.data({incr: 0.005, min: 1, max: 1000});
 
@@ -81,7 +82,7 @@ $.extend(MonoChordUI.prototype, {
             this.knobs.chord.val(f);
             this.knobs.chord.trigger("change");
         }
-        var pos = 100 * (100/f) + "%";
+        var pos = 100 * (this.range.min/f) + "%";
         this.bridge.css("right", pos);
     }
 
