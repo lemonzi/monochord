@@ -25,8 +25,8 @@ Since the parameters are part of the URL, it's possible to save "presets" as web
 * `f`: is a list of number in the format `f=110,200,300` that defines the notes available and their default tuning.
 * `timbre`: is a number that affects the timbre of the sound (similar to how the string is plucked).
 * `jitter`: controls a small random de-synchronization during the onset, in seconds.
-* `min`: minimum frequency.
-* `max`: maximum frequency.
+* `min`: minimum frequency (in Hz). This will be the reference point (open string) of the monochord.
+* `max`: maximum frequency (in Hz).
 
 Example:
 
