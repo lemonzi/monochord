@@ -8,10 +8,10 @@ function SecondOrderSection(ctx, params) {
 
     this.params = $.extend({
         resonators: [
-            {f: 300,   g: 3,  q: 20}, 
-            {f: 500,   g: 6,  q: 30}, 
-            {f: 1000,  g: 3,  q: 20}, 
-            {f: 3000,  g: 9, q: 10}
+            {f: 100,   g: 5,  q: 5}, 
+            {f: 170,   g: 6,  q: 5}, 
+            {f: 200,   g: 3,  q: 7}, 
+            {f: 3000,  g: 2,  q: 10}
         ],
         gain: 0.2
     }, params);

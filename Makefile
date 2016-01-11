@@ -4,10 +4,11 @@ CSS_SRC=$(shell echo node_modules/normalize.css/normalize.css css/{monochord,sty
 
 all: serve
 
-dist: $(JS_SRC) $(JS_LIB) $(CSS_SRC) fragments index.html
+dist: $(JS_SRC) $(JS_LIB) $(CSS_SRC) fragments css/img index.html
 	mkdir -p $@
 	cp index.html $@
 	cp -R fragments $@
+	cp -R css/img $@
 	uglifyjs $(JS_LIB) $(JS_SRC) >$@/bundle.js
 	cat $(CSS_SRC) >$@/bundle.css
 

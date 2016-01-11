@@ -23,18 +23,18 @@ $(function() {
 
     // This function plays all enabled monochords trying to 
     // minimize latency
+    var where = parseFloat(getQueryVariable("timbre")) || 0.01;
+    var jitter = parseFloat(getQueryVariable("jitter")) || 0.03;
     function playAll() {
         var oscs = monochords.filter(function(m) {
             return m.monochord.hasClass("enabled");
         }).map(function(m) {
             return m.osc;
         });
+        var now = ctx.currentTime + 0.05;
         oscs.forEach(function(osc) {
-            osc.setBeta(Math.random() * 4 + 3);
-        });
-        var now = ctx.currentTime + 0.1;
-        oscs.forEach(function(osc) {
-            osc.play(now + Math.random() * 0.05);
+            var when = now + Math.random() * jitter;
+            osc.play(when, where);
         });
         $(".play-btn").blur();
     }

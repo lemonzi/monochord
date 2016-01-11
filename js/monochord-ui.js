@@ -53,11 +53,19 @@ function MonoChordUI(opts) {
             }
         });
 
+        // Bridge highlight
+        $m.hover(function() {
+            that.bridge.addClass("active");
+        }, function() {
+            that.bridge.removeClass("active");
+        });
+
         // Toggle button
         $m.find(".play").click(function() {
             $([that.monochord, that.bridge]).toggleClass("enabled");
         });
 
+        // Default frequency
         that.setFrequency(opts.frequency);
     });
 }
@@ -77,3 +85,4 @@ $.extend(MonoChordUI.prototype, {
     }
 
 });
+

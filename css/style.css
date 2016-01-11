@@ -52,7 +52,8 @@ button:hover {
 }
 
 .string {
-    width: 960px;
+    width: 80%;
+    max-width: 960px;
     margin: 1em auto;
     padding: 0 auto;
     left: 0;
@@ -76,7 +77,11 @@ button:hover {
 }
 
 .string .bridge.enabled {
-    background: lightblue;
+    background: #87CEEB;
+}
+
+.string .bridge.enabled.active {
+    background: #eeeeff;
 }
 
 @media (min-width: 800px) {

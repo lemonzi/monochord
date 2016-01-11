@@ -1,5 +1,8 @@
 /**
  * MonoChord
+ *
+ * This is the audio engine.
+ *
  * Quim Llimona, 2015
  */
 
@@ -12,22 +15,28 @@ function MonoChord(ctx, params) {
     }, params);
 
     this.nodes = {
-        osc: ctx.createOscillator(),
+        osc: null,
         losses: ctx.createBiquadFilter(), 
-        envelope: ctx.createGain()
+        envelope: ctx.createGain(),
+        noise: ctx.createScriptProcessor(4096, 1, 1),
+        noiseEnvelope: ctx.createGain()
     };
 
-    this.nodes.osc.connect(this.nodes.losses);
+    this.nodes.noise.connect(this.nodes.noiseEnvelope);
+    this.nodes.noiseEnvelope.connect(this.nodes.losses);
     this.nodes.losses.connect(this.nodes.envelope);
 
-    this.setBeta(this.params.beta);
-    this.setFrequency(this.params.frequency);
-    this.nodes.osc.start();
+    this.nodes.noise.onaudioprocess = function(ev) {
+        var data = ev.outputBuffer.getChannelData(0);
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            data[i] = (Math.random() - 0.5) * 2;
+        }
+    };
+
+    this.nodes.noiseEnvelope.gain.value = 0;
 
     this.nodes.losses.type = this.nodes.losses.LOWPASS || 'lowpass';
-    this.nodes.losses.frequency.value = 0;
-
-    this.nodes.envelope.gain.value = 0;
 
     this.input = null;
     this.output = this.nodes.envelope;
@@ -36,39 +45,74 @@ function MonoChord(ctx, params) {
 
 $.extend(MonoChord.prototype, {
 
-    play: function(when) {
+    play: function(when, where) {
+        // Check timer 
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+        // Prepare oscillator
+        if (this.nodes.osc) {
+            this.nodes.osc.stop();
+            this.nodes.osc.disconnect();
+        }
+        this.nodes.osc = this.ctx.createOscillator();
+        this.setBeta(where);
+        this.nodes.osc.frequency.value = this.params.frequency;
+        this.nodes.osc.connect(this.nodes.losses);
+
         var env = this.nodes.envelope.gain;
         var lop = this.nodes.losses.frequency;
+        var noise = this.nodes.noiseEnvelope.gain;
         var t = when || this.ctx.currentTime;
 
         env.cancelScheduledValues(t);
         lop.cancelScheduledValues(t);
 
         t += 0;
+        this.nodes.osc.start(t);
         env.setValueAtTime(1, t);
+        noise.setValueAtTime(0.3, t);
         lop.setValueAtTime(8000, t);
 
-        t += 2.5;
-        lop.exponentialRampToValueAtTime(1000, t);
+        t += 0.03;
+        noise.exponentialRampToValueAtTime(0.001, t);
 
-        t += 1.5;
+        t += 2.;
+        lop.exponentialRampToValueAtTime(1000, t);
+        noise.linearRampToValueAtTime(0, t);
+
+        t += 1.2;
         env.exponentialRampToValueAtTime(0.4, t);
 
-        t += 5;
+        t += 3;
         env.exponentialRampToValueAtTime(0.01, t);
         lop.exponentialRampToValueAtTime(100, t);
-        env.setTargetAtTime(0, t, 0.01);
-        lop.setTargetAtTime(0, t, 0.01);
+        env.setTargetAtTime(0, t, 0.02);
+        lop.setTargetAtTime(0, t, 0.02);
         
+        this.timer = setTimeout(function() {
+            this.nodes.osc.stop();
+            this.nodes.osc.disconnect();
+            this.nodes.osc = null;
+            this.timer = null;
+            this.nodes.losses.frequency.value = 20000;
+            this.nodes.noiseEnvelope.gain = 0;
+            this.nodes.envelope.gain = 1;
+        }.bind(this), 10000);
     }, 
 
     setFrequency: function(freq) {
         this.params.frequency = freq;
-        this.nodes.osc.frequency.value = freq;
+        if (this.nodes.osc) {
+            this.nodes.osc.frequency.value = freq;
+        }
     },
 
     setBeta: function(beta) {
-        this.params.beta = beta;
+        if (beta) {
+            this.params.beta = beta;
+        }
         var nfft = 512;
 
         var real = new Float32Array(nfft);
