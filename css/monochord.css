@@ -48,6 +48,10 @@
     cursor: pointer;
 }
 
+.monochord-wrapper .knob-wrap.play.alt {
+    background-image: url("img/play.png");
+}
+
 .enabled > .monochord-wrapper .knob-wrap.play {
     background-color: #87CEEB;
 }

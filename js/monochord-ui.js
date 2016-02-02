@@ -12,7 +12,7 @@ function MonoChordUI(opts) {
     this.range = {min: opts.min, max: opts.max};
 
     // MonoChord audio backend
-    this.osc = new MonoChord(this.ctx);
+    this.osc = new MonoChord(this.ctx, {beta: opts.beta});
 
     // jQuery object for the wheels
     this.monochord = $('<div class="monochord enabled">');
@@ -75,8 +75,12 @@ function MonoChordUI(opts) {
     });
 
     // Enable/disable button
-    this.monochord.find(".play").click(function() {
-        $([that.monochord, that.bridge]).toggleClass("enabled");
+    this.monochord.find(".play").click(function(e) {
+        if (e.shiftKey) {
+            that.osc.play();
+        } else {
+            $([that.monochord, that.bridge]).toggleClass("enabled");
+        }
     });
 
     // Default frequency

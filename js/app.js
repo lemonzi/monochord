@@ -39,7 +39,6 @@ $(function() {
 
     // This function plays all enabled monochords trying to 
     // minimize latency
-    var where = getQueryVariable("timbre", "number") || 0.01;
     var jitter = getQueryVariable("jitter", "number") || 0.03;
     function playAll(e) {
         var oscs = monochords.filter(function(m) {
@@ -50,7 +49,7 @@ $(function() {
         var now = ctx.currentTime + 0.05;
         oscs.forEach(function(osc) {
             var when = now + Math.random() * jitter;
-            osc.play(when, where);
+            osc.play(when);
         });
         if (e && e.preventDefault) {
             e.preventDefault();
@@ -99,6 +98,7 @@ $(function() {
 
     var minFreq = getQueryVariable("min", "number") || 100;
     var maxFreq = getQueryVariable("max", "number") || 800;
+    var where = getQueryVariable("timbre", "number") || 0.01;
 
     // Create monochords
     var monochords = [];
@@ -106,6 +106,7 @@ $(function() {
         monochords = freqs.map(function(f) {
             var m = new MonoChordUI({
                 ctx: ctx,
+                beta: where, 
                 frequency: f,
                 min: minFreq,
                 max: maxFreq,
@@ -145,6 +146,15 @@ $(function() {
 
     // Keyboard shortcuts
     $(document).bind('keydown', 'space', playAll);
+
+    // This is bit hacky, but it display the play sign when shift
+    // is presssed on the monochords to play them alone.
+    $(document).bind('keydown', 'shift', function() {
+        $(".monochord .play").addClass("alt");
+    });
+    $(document).bind('keyup', 'shift', function() {
+        $(".monochord .play").removeClass("alt");
+    });
 
     // Buttons
     $(".play-btn").click(playAll);
