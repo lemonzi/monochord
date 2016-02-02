@@ -45,6 +45,7 @@ Examples:
 
 * Click the Play button or hit the space bar to play all enabled notes (the ones with the power button in blue).
 * The Show/Hide frequencies button toggles the display of each note's frequency on and off.
+* The Save button generates a cryptic link that encodes the current frequencies and which monochords are enabled, so that the obtained results can be shared.
 * You may click on the power buttons to enable or disable individual notes.
 * You can drag the outer knob of the notes to directly set their frequency (in Hz).
 * Inner knobs are relative and modify frequency in smaller increments. You can turn them as much as you want.
