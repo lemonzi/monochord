@@ -1,11 +1,26 @@
 /**
  * Monochord demo app
+ *
+ * This is the main script. After the document is loaded:
+ *
+ * - We define global callbacks with their state for the buttons
+ * - We read the settings from the URL, be it raw or encoded in a preset
+ * - We create the monochords accordingly
+ * - We setup the required callbacks for user intpu
+ *
  * Quim Llimona, 2015
  */
 
 $(function() {
 
-    // This function can show and hide monochord frequencies
+    // Save the original URL and parse the base64-encoded preset if provided
+    var settings = new URI(window.location.href);
+    var preset = getQueryVariable("p");
+    if (preset) {
+        preset = JSON.parse(atob(URI.decode(preset)));
+    }
+
+    // This function can show or hide all monochord frequencies
     var displayFrequencies = false;
     function toggleDisplayFrequencies(show) {
         if (typeof show !== "boolean") {
@@ -41,20 +56,45 @@ $(function() {
             e.preventDefault();
         }
     }
+
+    // This function creates a link with the current monochord settings 
+    // embedded in a base64-encoded JSON object.
+    function createLink(e) {
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
+        var freqs = monochords.map(function(m) {
+            return m.osc.params.frequency;
+        });
+        var enabled = monochords.map(function(m) {
+            return m.monochord.hasClass("enabled");
+        });
+        settings.removeQuery("f");
+        settings.removeQuery("p");
+        var preset = {freqs: freqs, enabled: enabled};
+        settings.addQuery("p", btoa(JSON.stringify(preset)));
+        var url = settings.toString();
+        window.prompt("The current settings have been saved at:", url);
+    }
      
     // Create the global audio context (one per app!)
     var ctx = new AudioContext();
 
-    // Create body and send to speakers
+    // Create instrument body and send to speakers
     var body = new SecondOrderSection(ctx);
     body.output.connect(ctx.destination);
 
-    // Parse frequencies
-    var freqs = getQueryVariable("f");
-    if (freqs) {
-        freqs = freqs.split(",").map(parseFloat);
+    // Parse frequencies (preset, manually set, or default)
+    var freqs = [];
+    if (preset) {
+        freqs = preset.freqs;
     } else {
-        freqs = [200, 400, 600, 800];
+        freqs = getQueryVariable("f");
+        if (freqs) {
+            freqs = freqs.split(",").map(parseFloat);
+        } else {
+            freqs = [200, 400, 600, 800];
+        }
     }
 
     var minFreq = getQueryVariable("min", "number") || 100;
@@ -62,13 +102,13 @@ $(function() {
 
     // Create monochords
     var monochords = [];
-    $.get("fragments/monochord.html",  function(t) {
+    $.get("fragments/monochord.html", function(t) {
         monochords = freqs.map(function(f) {
             var m = new MonoChordUI({
                 ctx: ctx,
-                frequency: f, 
+                frequency: f,
                 min: minFreq,
-                max: maxFreq, 
+                max: maxFreq,
                 template: $(t)
             });
             m.osc.output.connect(body.input);
@@ -78,16 +118,24 @@ $(function() {
         });
 
         // Initially disable monochords if requested
-        var disable = getQueryVariable("disable", "boolean");
-        if (disable) {
-            $(".monochord .play").click();
-            monochords[0].monochord.find(".play").click();
-            if (monochords.length > 1) {
-                monochords[1].monochord.find(".play").click();
+        if (preset) {
+            for (var i = 0; i < preset.enabled.length; i++) {
+                if (!preset.enabled[i]) {
+                    monochords[i].monochord.find(".play").click();
+                }
+            }
+        } else {
+            if (getQueryVariable("disable", "boolean")) {
+                $(".monochord .play").click();
+                monochords[0].monochord.find(".play").click();
+                if (monochords.length > 1) {
+                    monochords[1].monochord.find(".play").click();
+                }
             }
         }
 
-        // Hide frequency if requested
+        // Hide frequency by default if requested. In that case, we don't
+        // allow users to enable its display.
         var hide = getQueryVariable("hide", "boolean");
         if (hide) {
             $(".freq-btn").hide();
@@ -101,6 +149,7 @@ $(function() {
     // Buttons
     $(".play-btn").click(playAll);
     $(".freq-btn").click(toggleDisplayFrequencies);
+    $('.link-btn').click(createLink);
 
 });
 

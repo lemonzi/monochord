@@ -5,21 +5,30 @@
 
 function MonoChordUI(opts) {
     
+    // WebAudio Context
     this.ctx = opts.ctx;
-    this.range = {min: opts.min, max: opts.max};
-    this.osc = new MonoChord(this.ctx);
-    this.monochord = $('<div class="monochord enabled">');
-    this.bridge = $('<div class="bridge enabled">');
 
+    // Frequency range in the wheel
+    this.range = {min: opts.min, max: opts.max};
+
+    // MonoChord audio backend
+    this.osc = new MonoChord(this.ctx);
+
+    // jQuery object for the wheels
+    this.monochord = $('<div class="monochord enabled">');
     this.monochord.append(opts.template.clone());
 
+    // jQuery object for the small bridge
+    this.bridge = $('<div class="bridge enabled">');
+
+    // jQuery objects for the 3 wheels
     this.knobs = {
         chord: this.monochord.find(".chord .knob"),
         fine: this.monochord.find(".fine .knob"),
         superfine: this.monochord.find(".super-fine .knob")
     };
 
-    // Some specific default values
+    // Some specific default values, embedded in the HTML
     this.knobs.chord.data({min: this.range.min, max: this.range.max});
     this.knobs.fine.data({incr: 0.05, min: 1, max: 1000});
     this.knobs.superfine.data({incr: 0.005, min: 1, max: 1000});
@@ -31,6 +40,7 @@ function MonoChordUI(opts) {
         format: function(v) { return v.toFixed(2) + " Hz" }, 
         change: function(v) {
             var chord = that.knobs.chord;
+            // This takes care of the ipod-like infinite wheel
             if (this.$.data("relative")) {
                 var vn = v / this.$.data("max");
                 var diff = vn - (this.$.data("lastValue") || vn);
@@ -53,6 +63,7 @@ function MonoChordUI(opts) {
         }
     });
     
+    // Init the infinite wheels so that the blue handle appears
     this.knobs.fine.val(1).trigger('change');
     this.knobs.superfine.val(1).trigger('change');
 
@@ -63,7 +74,7 @@ function MonoChordUI(opts) {
         that.bridge.removeClass("active");
     });
 
-    // Toggle button
+    // Enable/disable button
     this.monochord.find(".play").click(function() {
         $([that.monochord, that.bridge]).toggleClass("enabled");
     });
@@ -82,6 +93,7 @@ $.extend(MonoChordUI.prototype, {
             this.knobs.chord.val(f);
             this.knobs.chord.trigger("change");
         }
+        // Move bridge accordingly
         var pos = 100 * (this.range.min/f) + "%";
         this.bridge.css("right", pos);
     }

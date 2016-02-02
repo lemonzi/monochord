@@ -10,7 +10,8 @@
     "jquery": "^2.1.4",
     "jquery-knob": "^1.2.11",
     "jquery.hotkeys": "^0.1.0",
-    "normalize.css": "^3.0.3"
+    "normalize.css": "^3.0.3",
+    "urijs": "^1.17.0"
   },
   "dev-dependencies": {
     "uglify-js": "latest",

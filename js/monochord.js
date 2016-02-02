@@ -1,7 +1,19 @@
 /**
  * MonoChord
  *
- * This is the audio engine.
+ * This is the audio engine. Pipeline:
+ * 
+ * Additive synth  -----------|
+ *                            |-- Low-pass filter -- ADSR
+ * Noise generator -- ADSR  --|
+ *
+ * The output of this pipeline is then connected to a bank of resonators
+ * in the main script.
+ *
+ * The beta mentioned in the code is a timbre control parameter. It's supposed
+ * to simulate plucking the string at different positions by interpolating
+ * how triangular or sawtooth the wave looks like, but it doesn't work very 
+ * well.
  *
  * Quim Llimona, 2015
  */
@@ -45,20 +57,30 @@ function MonoChord(ctx, params) {
 
 $.extend(MonoChord.prototype, {
 
+    /*
+     * This is where the magic happens. We have a custom additive synth
+     * with some transient noise. In this function, we define all the
+     * envelopes and trigger them.
+     */
     play: function(when, where) {
-        // Check timer 
+        // Check that this monochord wasn't already playing.
+        // If it was, we will override it, so we just clear the timeout.
         if (this.timer) {
             clearTimeout(this.timer);
             this.timer = null;
         }
-        // Prepare oscillator
+        // Prepare oscillator by clearing it
         if (this.nodes.osc) {
             this.nodes.osc.stop();
             this.nodes.osc.disconnect();
         }
+        // Create the oscillator for this note
         this.nodes.osc = this.ctx.createOscillator();
+        // Set the partial amplitudes (spectrum)
         this.setBeta(where);
+        // Set the required frequency
         this.nodes.osc.frequency.value = this.params.frequency;
+        // Conect to the pipeline
         this.nodes.osc.connect(this.nodes.losses);
 
         var env = this.nodes.envelope.gain;
@@ -91,6 +113,7 @@ $.extend(MonoChord.prototype, {
         env.setTargetAtTime(0, t, 0.02);
         lop.setTargetAtTime(0, t, 0.02);
         
+        // Make sure we reset the system and stop the note after 10 seconds
         this.timer = setTimeout(function() {
             this.nodes.osc.stop();
             this.nodes.osc.disconnect();

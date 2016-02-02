@@ -1,5 +1,9 @@
 /**
  * Series Second Order Section
+ *
+ * This module impements a bank of second-order peaking filters 
+ * (resonators) connected in series.
+ *
  * Quim Llimona, 2015
  */
 

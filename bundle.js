@@ -8,6 +8,7 @@
         'node_modules/jquery/dist/jquery.js',
         'node_modules/jquery.hotkeys/jquery.hotkeys.js',
         'node_modules/jquery-knob/dist/jquery.knob.min.js',
+        'node_modules/urijs/src/URI.js', 
         'js/lib/getQueryVariable.js',
         'js/lib/AudioContextMonkeyPatch.js',
         'js/sos.js',
