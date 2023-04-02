@@ -41,6 +41,7 @@ $(function() {
     // minimize latency
     var jitter = getQueryVariable("jitter", "number") || 0.03;
     function playAll(e) {
+        ctx.resume();
         var oscs = monochords.filter(function(m) {
             return m.monochord.hasClass("enabled");
         }).map(function(m) {
