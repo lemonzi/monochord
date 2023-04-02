@@ -30,7 +30,7 @@ function MonoChord(ctx, params) {
         osc: null,
         losses: ctx.createBiquadFilter(), 
         envelope: ctx.createGain(),
-        noise: ctx.createScriptProcessor(4096, 1, 1),
+        noise: new AudioWorkletNode(ctx , 'noise_worklet', {}),
         noiseEnvelope: ctx.createGain()
     };
 
