@@ -144,8 +144,8 @@ $.extend(MonoChord.prototype, {
         var m = this.params.beta;
         var c1 = 2 * m * m / ((m-1) * Math.PI * Math.PI);
         var c2 = (m-1) * Math.PI / m;
-        for (var n = 0; n < nfft; n++) {
-            real[n] = c1 * Math.pow(-1, n) * Math.sin(n * c2) / (n*n);
+        for (var n = 1; n <= nfft; n++) {
+            real[n-1] = c1 * Math.pow(-1, n) * Math.sin(n * c2) / (n*n);
         }
 
         this.nodes.osc.setPeriodicWave(
